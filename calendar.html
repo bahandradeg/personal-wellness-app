@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar</title>
+  <style>
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #f8f3ee;
+      color: #4a3f35;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #d8a48f;
+    }
+    table.calendar {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table.calendar td, table.calendar th {
+      border: 1px solid #d8a48f;
+      text-align: center;
+      padding: 8px;
+      cursor: pointer;
+    }
+    table.calendar td:hover {
+      background-color: #fff5f0;
+    }
+    .log-display {
+      border: 1px solid #d8a48f;
+      background: #ffffff;
+      padding: 15px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+  
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  nav a {
+    flex: 1 1 45%;
+    text-align: center;
+    background: #fff5f0;
+    padding: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #4a3f35;
+  }
+
+  input, button, textarea {
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .calendar td, .calendar th {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  button {
+    margin-top: 8px;
+    padding: 10px;
+    border: none;
+    background-color: #d8a48f;
+    color: white;
+    border-radius: 6px;
+    width: 100%;
+  }
+}
+
+</style>
+</head>
+<body>
+  <h1>📅 Wellness Calendar</h1>
+  <nav>
+    <a href="index.html">To-Do</a> |
+    <a href="reading.html">Reading</a> |
+    <a href="mood.html">Mood & Journal</a> |
+    <a href="braindump.html">Brain Dump</a> |
+    <a href="calendar.html">Calendar</a>
+  </nav>
+  <hr>
+
+  <h2>Select a Date</h2>
+  <table class="calendar" id="calendarTable"></table>
+
+  <div class="log-display" id="logDisplay">Select a date to view your entries.</div>
+
+  <script>
+    function generateCalendar() {
+      const table = document.getElementById("calendarTable");
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const lastDate = new Date(year, month + 1, 0).getDate();
+
+      let html = "<tr>";
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      for (const day of days) {
+        html += `<th>${day}</th>`;
+      }
+      html += "</tr><tr>";
+
+      for (let i = 0; i < firstDay; i++) {
+        html += "<td></td>";
+      }
+
+      for (let day = 1; day <= lastDate; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        html += `<td onclick="loadLogs('${dateStr}')">${day}</td>`;
+        if ((day + firstDay) % 7 === 0) html += "</tr><tr>";
+      }
+
+      html += "</tr>";
+      table.innerHTML = html;
+    }
+
+    function loadLogs(date) {
+      const mood = localStorage.getItem(`selectedMood-${date}`) || "N/A";
+      const feeling = localStorage.getItem(`feelingInput-${date}`) || "N/A";
+      const journal = localStorage.getItem(`journalEntry-${date}`) || "N/A";
+      const brain = localStorage.getItem(`brainDump-${date}`) || "N/A";
+      const read = localStorage.getItem(`readingPrompt-${date}`) || "N/A";
+      const reflect = localStorage.getItem(`reflection-${date}`) || "N/A";
+      const todos = JSON.parse(localStorage.getItem(`tasks-${date}`) || "[]");
+
+      let taskList = "";
+      if (todos.length > 0) {
+        taskList = todos.map(task => `- [${task.done ? "x" : " "}] ${task.text}`).join("\n");
+      } else {
+        taskList = "N/A";
+      }
+
+      const output = `🗓️ Date: ${date}
+
+😊 Mood: ${mood}
+🪞 Feeling: ${feeling}
+
+📓 Journal:
+${journal}
+
+🧠 Brain Dump:
+${brain}
+
+📚 Reading:
+${read}
+
+✍️ Reflection:
+${reflect}
+
+✅ To-Do List:
+${taskList}`;
+
+      document.getElementById("logDisplay").textContent = output;
+    }
+
+    window.onload = generateCalendar;
+  </script>
+</body>
+</html>
