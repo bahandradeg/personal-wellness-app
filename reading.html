@@ -22,6 +22,39 @@
       display: block;
       margin-bottom: 5px;
     }
+    @media (max-width: 600px) {
+  body {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  nav a {
+    flex: 1 1 45%;
+    text-align: center;
+    background: #fff5f0;
+    padding: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #4a3f35;
+  }
+
+  input, button, textarea {
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .calendar td, .calendar th {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
   </style>
 </head>
 <body>
