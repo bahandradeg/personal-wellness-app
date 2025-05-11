@@ -126,19 +126,20 @@
     <button onclick="saveState()">Save Entry</button>
   </section>
   <script>
-    function saveState() {
-      localStorage.setItem('feelingInput', document.getElementById('feelingInput').value);
-      localStorage.setItem('journalEntry', document.getElementById('journalEntry').value);
-    }
-    function selectEmoji(emoji) {
-      document.getElementById('selectedMood').innerText = emoji;
-      localStorage.setItem('selectedMood', emoji);
-    }
-    window.onload = function() {
-      document.getElementById('feelingInput').value = localStorage.getItem('feelingInput') || '';
-      document.getElementById('journalEntry').value = localStorage.getItem('journalEntry') || '';
-      document.getElementById('selectedMood').innerText = localStorage.getItem('selectedMood') || '';
-    };
-  </script>
+  function saveState() {
+    const today = new Date().toISOString().split("T")[0];
+    localStorage.setItem(`journalEntry-${today}`, document.getElementById("journalEntry").value);
+    localStorage.setItem(`feelingInput-${today}`, document.getElementById("feelingInput").value);
+    localStorage.setItem(`selectedMood-${today}`, document.getElementById("selectedMood").innerText);
+    alert("Saved for today!");
+  }
+
+  window.onload = function () {
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("journalEntry").value = localStorage.getItem(`journalEntry-${today}`) || "";
+    document.getElementById("feelingInput").value = localStorage.getItem(`feelingInput-${today}`) || "";
+    document.getElementById("selectedMood").innerText = localStorage.getItem(`selectedMood-${today}`) || "";
+  };
+</script>
 </body>
 </html>
