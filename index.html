@@ -18,6 +18,11 @@
       color: #d8a48f;
     }
 
+    nav a {
+      text-decoration: none;
+      color: #4a3f35;
+    }
+
     section {
       margin-bottom: 40px;
     }
@@ -34,6 +39,28 @@
       font-size: 12px;
       padding: 4px 6px;
       width: auto;
+    }
+
+    .task-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .task-input-row input {
+      flex: 1;
+      padding: 8px;
+    }
+
+    .task-input-row button {
+      padding: 6px 10px;
+      font-size: 14px;
+      background-color: #d8a48f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      white-space: nowrap;
     }
 
     @media (max-width: 600px) {
@@ -55,33 +82,22 @@
         background: #fff5f0;
         padding: 8px;
         border-radius: 8px;
-        text-decoration: none;
-        color: #4a3f35;
       }
 
       input, button, textarea {
         font-size: 1em;
-        width: 100%;
         box-sizing: border-box;
       }
 
       ul.task-list button {
-        width: auto;
         font-size: 12px;
         padding: 4px 6px;
+        width: auto;
       }
 
       .calendar td, .calendar th {
         font-size: 12px;
         padding: 6px;
-      }
-
-      button {
-        padding: 10px;
-        background-color: #d8a48f;
-        color: white;
-        border: none;
-        border-radius: 6px;
       }
     }
   </style>
@@ -99,8 +115,10 @@
 
   <section>
     <h2>🗓️ To-Do List</h2>
-    <input type="text" id="newTaskInput" placeholder="Add a new task..." style="width: 80%;">
-    <button onclick="addTask()">Add</button>
+    <div class="task-input-row">
+      <input type="text" id="newTaskInput" placeholder="Add a new task...">
+      <button id="addTaskButton" onclick="addTask()">Add</button>
+    </div>
     <ul id="taskList" class="task-list"></ul>
   </section>
 
