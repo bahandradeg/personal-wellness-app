@@ -104,7 +104,7 @@
     }
 
     function fetchReadings() {
-      fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLiaRY821CnW7kPS-MraKgLXaDzRGTV4DuLXRu-ioSm6-J0Qw725EqABoc6752Hgs5EgB1u24G93b6/pub?output=csv')
+      fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLiaRY821CnW7kPS-MraKgLXaDzRGTV4DuLXRu-ioSm6-J0Qw725EqABoc6752Hgs5EgB1u24G93b6/pubhtml')
         .then(response => response.text())
         .then(csv => {
           const lines = csv.split('\n').slice(1);
