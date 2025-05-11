@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Reading</title>
+  <style>
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #f8f3ee;
+      color: #4a3f35;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #d8a48f;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    #historyList a {
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Reading</h1>
+  <nav>
+    <a href="index.html">To-Do</a> |
+    <a href="reading.html">Reading</a> |
+    <a href="mood.html">Mood & Journal</a> |
+    <a href="braindump.html">Brain Dump</a>
+  </nav>
+  <hr>
+  <section>
+    <div id="reading-prompt">Loading...</div>
+    <button onclick="newReading()">Show Me Another</button>
+  </section>
+  <section>
+    <h2>🗂️ Reading History</h2>
+    <div id="historyList"></div>
+  </section>
+  <script>
+    let readings = [];
+
+    function newReading() {
+      if (readings.length === 0) return;
+      const random = Math.floor(Math.random() * readings.length);
+      const selected = readings[random];
+      const html = `<a href="${selected.url}" target="_blank">${selected.title}</a>`;
+      document.getElementById('reading-prompt').innerHTML = html;
+      addToHistory(selected);
+    }
+
+    function addToHistory(reading) {
+      let history = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+      const exists = history.some(item => item.url === reading.url);
+      if (!exists) {
+        history.unshift(reading);
+        if (history.length > 20) history.pop();
+        localStorage.setItem('readingHistory', JSON.stringify(history));
+        renderHistory();
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      container.innerHTML = '';
+      const history = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+      history.forEach(item => {
+        const link = document.createElement('a');
+        link.href = item.url;
+        link.target = '_blank';
+        link.textContent = item.title;
+        container.appendChild(link);
+      });
+    }
+
+    function fetchReadings() {
+      fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLiaRY821CnW7kPS-MraKgLXaDzRGTV4DuLXRu-ioSm6-J0Qw725EqABoc6752Hgs5EgB1u24G93b6/pub?output=csv')
+        .then(response => response.text())
+        .then(csv => {
+          const lines = csv.split('\n').slice(1);
+          readings = lines.map(line => {
+            const [title, url] = line.split(',');
+            return { title: title.trim(), url: url.trim() };
+          }).filter(item => item.title && item.url);
+          newReading();
+        });
+    }
+
+    window.onload = function() {
+      fetchReadings();
+      renderHistory();
+    };
+  </script>
+</body>
+</html>
