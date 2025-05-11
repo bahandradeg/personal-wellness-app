@@ -1,145 +1,121 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mood & Journal</title>
-  
-<style>
-  body {
-    font-family: 'Space Mono', monospace;
-    background-color: #f8f3ee;
-    color: #4a3f35;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 {
-    color: #d8a48f;
-  }
-  section {
-    margin-bottom: 40px;
-  }
-  .task-list input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  .journal, .brain-dump {
-    background: #fff;
-    border: 1px solid #d8a48f;
-    padding: 10px;
-    font-family: 'Space Mono', monospace;
-    white-space: pre-wrap;
-    width: 100%;
-    height: 100px;
-  }
-  .emoji-picker {
-    font-size: 24px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  .emoji-selected {
-    font-size: 24px;
-    display: inline-block;
-    margin-left: 10px;
-  }
-  #historyList a {
-    display: block;
-    margin-bottom: 5px;
-  }
+  <style>
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #f8f3ee;
+      color: #4a3f35;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #d8a48f;
+    }
+    section {
+      margin-bottom: 30px;
+    }
+    .journal {
+      background: #fff;
+      border: 1px solid #d8a48f;
+      padding: 10px;
+      font-family: 'Space Mono', monospace;
+      white-space: pre-wrap;
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+    }
+    .emoji-picker {
+      font-size: 24px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .emoji-selected {
+      font-size: 24px;
+      display: inline-block;
+      margin-left: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #d8a48f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+    }
 
-@media (max-width: 600px) {
-  body {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  nav a {
-    flex: 1 1 45%;
-    text-align: center;
-    background: #fff5f0;
-    padding: 8px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #4a3f35;
-  }
-
-  input, button, textarea {
-    font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .calendar td, .calendar th {
-    font-size: 12px;
-    padding: 6px;
-  }
-
-  button {
-    margin-top: 8px;
-    padding: 10px;
-    border: none;
-    background-color: #d8a48f;
-    color: white;
-    border-radius: 6px;
-    width: 100%;
-  }
-}
-
-</style>
-
+    @media (max-width: 600px) {
+      body {
+        font-size: 14px;
+        padding: 10px;
+      }
+      input, button, textarea {
+        font-size: 1em;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .emoji-picker {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>😊 Mood & Journal</h1>
-  
-<nav>
-  <a href="index.html">To-Do</a> |
-  <a href="reading.html">Reading</a> |
-  <a href="mood.html">Mood & Journal</a> |
-  <a href="braindump.html">Brain Dump</a> |
-  <a href="calendar.html">Calendar</a>
-</nav>
-<hr>
+  <nav>
+    <a href="index.html">To-Do</a> |
+    <a href="reading.html">Reading</a> |
+    <a href="mood.html">Mood & Journal</a> |
+    <a href="braindump.html">Brain Dump</a> |
+    <a href="calendar.html">Calendar</a>
+  </nav>
+  <hr>
 
   <section>
     <h2>Emoji Mood</h2>
     <div id="emojiPicker">
       <span class="emoji-picker" onclick="selectEmoji('🫠')">🫠</span>
+      <span class="emoji-picker" onclick="selectEmoji('😎')">😎</span>
       <span class="emoji-picker" onclick="selectEmoji('🥲')">🥲</span>
       <span class="emoji-picker" onclick="selectEmoji('🫤')">🫤</span>
       <span class="emoji-picker" onclick="selectEmoji('😶‍🌫️')">😶‍🌫️</span>
-      <span class="emoji-picker" onclick="selectEmoji('😎')">😎</span>
     </div>
     <div>Selected Mood: <span class="emoji-selected" id="selectedMood"></span></div>
-    <input type="text" id="feelingInput" placeholder="Name your feeling (e.g., curious, overwhelmed)" style="width:100%; margin-top:10px;" oninput="saveState()" />
+    <input type="text" id="feelingInput" placeholder="Name your feeling (e.g., curious, overwhelmed)" />
   </section>
+
   <section>
     <h2>📓 Journal</h2>
     <p>Prompt: <span id="journalPrompt">What felt nourishing today?</span></p>
     <textarea class="journal" id="journalEntry" placeholder="Write freely here..."></textarea>
     <button onclick="saveState()">Save Entry</button>
   </section>
-  <script>
-  function saveState() {
-    const today = new Date().toISOString().split("T")[0];
-    localStorage.setItem(`journalEntry-${today}`, document.getElementById("journalEntry").value);
-    localStorage.setItem(`feelingInput-${today}`, document.getElementById("feelingInput").value);
-    localStorage.setItem(`selectedMood-${today}`, document.getElementById("selectedMood").innerText);
-    alert("Saved for today!");
-  }
 
-  window.onload = function () {
-    const today = new Date().toISOString().split("T")[0];
-    document.getElementById("journalEntry").value = localStorage.getItem(`journalEntry-${today}`) || "";
-    document.getElementById("feelingInput").value = localStorage.getItem(`feelingInput-${today}`) || "";
-    document.getElementById("selectedMood").innerText = localStorage.getItem(`selectedMood-${today}`) || "";
-  };
-</script>
+  <script>
+    function saveState() {
+      const today = new Date().toISOString().split("T")[0];
+      localStorage.setItem(`journalEntry-${today}`, document.getElementById("journalEntry").value);
+      localStorage.setItem(`feelingInput-${today}`, document.getElementById("feelingInput").value);
+      localStorage.setItem(`selectedMood-${today}`, document.getElementById("selectedMood").innerText);
+      alert("Saved for today!");
+    }
+
+    function selectEmoji(emoji) {
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("selectedMood").innerText = emoji;
+      localStorage.setItem(`selectedMood-${today}`, emoji);
+    }
+
+    window.onload = function () {
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("journalEntry").value = localStorage.getItem(`journalEntry-${today}`) || "";
+      document.getElementById("feelingInput").value = localStorage.getItem(`feelingInput-${today}`) || "";
+      document.getElementById("selectedMood").innerText = localStorage.getItem(`selectedMood-${today}`) || "";
+    };
+  </script>
 </body>
 </html>
