@@ -111,13 +111,17 @@
     <textarea class="brain-dump" id="brainDump" placeholder="Let it all out in a typewriter-style flow..."></textarea>
     <button onclick="saveState()">Save Entry</button>
   </section>
-  <script>
-    function saveState() {
-      localStorage.setItem('brainDump', document.getElementById('brainDump').value);
-    }
-    window.onload = function() {
-      document.getElementById('brainDump').value = localStorage.getItem('brainDump') || '';
-    };
-  </script>
+ <script>
+  function saveState() {
+    const today = new Date().toISOString().split("T")[0];
+    localStorage.setItem(`brainDump-${today}`, document.getElementById("brainDump").value);
+    alert("Saved for today!");
+  }
+
+  window.onload = function () {
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("brainDump").value = localStorage.getItem(`brainDump-${today}`) || "";
+  };
+</script>
 </body>
 </html>
